@@ -1,54 +1,49 @@
 let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 let currentAccount = null;
 
-// 💾 Save data
+// 💾 Save
 function saveData() {
     localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-// 🆕 Create account (MANUAL account number)
+// 🆕 Create Account
 function createAccount() {
     let accNo = parseInt(document.getElementById("accNo").value);
     let name = document.getElementById("name").value;
+    let pin = document.getElementById("pin").value;
     let balance = parseFloat(document.getElementById("balance").value);
 
-    if (isNaN(accNo) || !name || isNaN(balance)) {
+    if (isNaN(accNo) || !name || !pin || isNaN(balance)) {
         alert("Enter valid details");
         return;
     }
 
-    // check duplicate account number
-    let exists = accounts.find(a => a.accNo === accNo);
-    if (exists) {
-        alert("Account Number already exists!");
+    if (accounts.find(a => a.accNo === accNo)) {
+        alert("Account already exists");
         return;
     }
 
-    let account = {
+    accounts.push({
         accNo,
         name,
+        pin,
         balance,
         history: [`Account created with ₹${balance}`]
-    };
+    });
 
-    accounts.push(account);
     saveData();
-
-    alert("Account Created Successfully!");
-
-    document.getElementById("accNo").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("balance").value = "";
+    alert("Account Created!");
 }
 
-// 🔍 Search account
-function searchAccount() {
-    let accNo = parseInt(document.getElementById("searchAcc").value);
+// 🔐 LOGIN
+function loginAccount() {
+    let accNo = parseInt(document.getElementById("loginAccNo").value);
+    let pin = document.getElementById("loginPin").value;
 
-    currentAccount = accounts.find(acc => acc.accNo === accNo);
+    currentAccount = accounts.find(a => a.accNo === accNo && a.pin === pin);
 
     if (!currentAccount) {
-        alert("Account not found");
+        alert("Invalid login");
         return;
     }
 
@@ -57,7 +52,7 @@ function searchAccount() {
 
 // 💰 Deposit
 function deposit() {
-    if (!currentAccount) return alert("Search account first");
+    if (!currentAccount) return alert("Login first");
 
     let amount = parseFloat(document.getElementById("amount").value);
     if (isNaN(amount) || amount <= 0) return;
@@ -71,7 +66,7 @@ function deposit() {
 
 // 💸 Withdraw
 function withdraw() {
-    if (!currentAccount) return alert("Search account first");
+    if (!currentAccount) return alert("Login first");
 
     let amount = parseFloat(document.getElementById("amount").value);
     if (isNaN(amount) || amount <= 0) return;
@@ -88,7 +83,36 @@ function withdraw() {
     updateUI();
 }
 
-// 📊 Show account details
+// 🔁 Transfer Money
+function transfer() {
+    if (!currentAccount) return alert("Login first");
+
+    let toAcc = parseInt(document.getElementById("toAcc").value);
+    let amount = parseFloat(document.getElementById("transferAmount").value);
+
+    let receiver = accounts.find(a => a.accNo === toAcc);
+
+    if (!receiver) {
+        alert("Receiver not found");
+        return;
+    }
+
+    if (amount > currentAccount.balance || amount <= 0) {
+        alert("Invalid amount");
+        return;
+    }
+
+    currentAccount.balance -= amount;
+    receiver.balance += amount;
+
+    currentAccount.history.push(`Sent ₹${amount} to ${toAcc}`);
+    receiver.history.push(`Received ₹${amount} from ${currentAccount.accNo}`);
+
+    saveData();
+    updateUI();
+}
+
+// 📊 UI Update
 function updateUI() {
     document.getElementById("accountInfo").innerText =
         `Account: ${currentAccount.name} (Acc No: ${currentAccount.accNo})`;
@@ -96,12 +120,20 @@ function updateUI() {
     document.getElementById("balanceDisplay").innerText =
         "Balance: ₹" + currentAccount.balance;
 
-    let historyList = document.getElementById("history");
-    historyList.innerHTML = "";
+    // Summary
+    let totalDeposits = currentAccount.history.filter(h => h.includes("Deposited")).length;
+    let totalWithdrawals = currentAccount.history.filter(h => h.includes("Withdrawn")).length;
 
-    currentAccount.history.slice().reverse().forEach(item => {
+    document.getElementById("summary").innerText =
+        `Deposits: ${totalDeposits} | Withdrawals: ${totalWithdrawals}`;
+
+    // History
+    let list = document.getElementById("history");
+    list.innerHTML = "";
+
+    currentAccount.history.slice().reverse().forEach(h => {
         let li = document.createElement("li");
-        li.innerText = item;
-        historyList.appendChild(li);
+        li.innerText = h;
+        list.appendChild(li);
     });
 }

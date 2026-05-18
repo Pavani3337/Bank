@@ -2,35 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bank System</title>
+    <title>Core Banking System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-    <h1>Banking System</h1>
+    <h1>Core Banking System</h1>
 
+    <!-- CREATE ACCOUNT -->
     <h3>Create Account</h3>
     <input id="accNo" type="number" placeholder="Account Number">
     <input id="name" placeholder="Account Name">
+    <input id="pin" type="password" placeholder="4-digit PIN">
     <input id="balance" type="number" placeholder="Initial Balance">
-    <button onclick="createAccount()">Create Account</button>
+    <button onclick="createAccount()">Create</button>
 
     <hr>
 
-    <h3>Search Account</h3>
-    <input id="searchAcc" type="number" placeholder="Enter Account Number">
-    <button onclick="searchAccount()">Search</button>
+    <!-- LOGIN / SEARCH -->
+    <h3>Login / Search Account</h3>
+    <input id="loginAccNo" type="number" placeholder="Account Number">
+    <input id="loginPin" type="password" placeholder="PIN">
+    <button onclick="loginAccount()">Login</button>
 
     <h2 id="accountInfo">No Account Selected</h2>
     <h2 id="balanceDisplay"></h2>
 
+    <!-- ACTIONS -->
     <div class="actions">
         <input id="amount" type="number" placeholder="Amount">
         <button onclick="deposit()">Deposit</button>
         <button onclick="withdraw()">Withdraw</button>
     </div>
+
+    <!-- TRANSFER -->
+    <h3>Transfer Money</h3>
+    <input id="toAcc" type="number" placeholder="To Account Number">
+    <input id="transferAmount" type="number" placeholder="Amount">
+    <button onclick="transfer()">Transfer</button>
+
+    <!-- SUMMARY -->
+    <h3>Summary</h3>
+    <p id="summary"></p>
 
     <h3>Transactions</h3>
     <ul id="history"></ul>
