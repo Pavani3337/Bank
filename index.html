@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mini Banking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Mini Banking System</h1>
+
+    <div class="account-box">
+        <input id="name" placeholder="Account Name">
+        <input id="balance" type="number" placeholder="Initial Balance">
+
+        <button onclick="createAccount()">Create Account</button>
+    </div>
+
+    <hr>
+
+    <h2 id="accountInfo">No Account Created</h2>
+
+    <div class="actions">
+        <input id="amount" type="number" placeholder="Enter Amount">
+
+        <button onclick="deposit()">Deposit</button>
+        <button onclick="withdraw()">Withdraw</button>
+    </div>
+
+    <h2 id="balanceDisplay">Balance: 0</h2>
+
+    <h3>Transaction History</h3>
+    <ul id="history"></ul>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
