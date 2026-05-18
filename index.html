@@ -14,27 +14,25 @@
     <div class="account-box">
         <input id="name" placeholder="Account Name">
         <input id="balance" type="number" placeholder="Initial Balance">
-
-        <button onclick="createAccount()">Create Account</button>
+        <button onclick="createAccountManually()">Create Account</button>
     </div>
 
     <hr>
 
     <div class="search-box">
         <input id="searchAcc" type="number" placeholder="Enter Account Number">
-        <button onclick="searchAccount()">Search</button>
+        <button onclick="searchAccount()">Search / Load Account</button>
     </div>
 
     <h2 id="accountInfo">No Account Selected</h2>
 
     <div class="actions">
         <input id="amount" type="number" placeholder="Enter Amount">
-
         <button onclick="deposit()">Deposit</button>
         <button onclick="withdraw()">Withdraw</button>
     </div>
 
-    <h2 id="balanceDisplay">Balance: 0</h2>
+    <h2 id="balanceDisplay">Balance: ₹0</h2>
 
     <h3>Transaction History</h3>
     <ul id="history"></ul>
