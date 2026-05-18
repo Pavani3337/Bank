@@ -1,22 +1,28 @@
 let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 let currentAccount = null;
 
-// 💾 Save to localStorage
+// 💾 Save data
 function saveData() {
     localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-// 🆕 Manual account creation
-function createAccountManually() {
+// 🆕 Create account (MANUAL account number)
+function createAccount() {
+    let accNo = parseInt(document.getElementById("accNo").value);
     let name = document.getElementById("name").value;
     let balance = parseFloat(document.getElementById("balance").value);
 
-    if (!name || isNaN(balance)) {
+    if (isNaN(accNo) || !name || isNaN(balance)) {
         alert("Enter valid details");
         return;
     }
 
-    let accNo = Math.floor(1000 + Math.random() * 9000);
+    // check duplicate account number
+    let exists = accounts.find(a => a.accNo === accNo);
+    if (exists) {
+        alert("Account Number already exists!");
+        return;
+    }
 
     let account = {
         accNo,
@@ -28,54 +34,25 @@ function createAccountManually() {
     accounts.push(account);
     saveData();
 
-    alert("Account Created! Account No: " + accNo);
+    alert("Account Created Successfully!");
 
+    document.getElementById("accNo").value = "";
     document.getElementById("name").value = "";
     document.getElementById("balance").value = "";
 }
 
-// 🔍 Smart Search (Load or Create)
+// 🔍 Search account
 function searchAccount() {
     let accNo = parseInt(document.getElementById("searchAcc").value);
 
-    if (isNaN(accNo)) {
-        alert("Enter valid account number");
+    currentAccount = accounts.find(acc => acc.accNo === accNo);
+
+    if (!currentAccount) {
+        alert("Account not found");
         return;
     }
 
-    let found = accounts.find(acc => acc.accNo === accNo);
-
-    // ✅ If exists
-    if (found) {
-        currentAccount = found;
-        updateUI();
-        return;
-    }
-
-    // 🆕 If not found → create new
-    let name = prompt("Account not found. Enter Account Name:");
-    if (!name) return;
-
-    let balance = parseFloat(prompt("Enter Initial Balance:"));
-    if (isNaN(balance)) {
-        alert("Invalid balance");
-        return;
-    }
-
-    let newAccount = {
-        accNo: accNo,
-        name: name,
-        balance: balance,
-        history: [`Account created with ₹${balance}`]
-    };
-
-    accounts.push(newAccount);
-    saveData();
-
-    currentAccount = newAccount;
     updateUI();
-
-    alert("Account Created Successfully!");
 }
 
 // 💰 Deposit
@@ -111,10 +88,8 @@ function withdraw() {
     updateUI();
 }
 
-// 📊 Update UI
+// 📊 Show account details
 function updateUI() {
-    if (!currentAccount) return;
-
     document.getElementById("accountInfo").innerText =
         `Account: ${currentAccount.name} (Acc No: ${currentAccount.accNo})`;
 

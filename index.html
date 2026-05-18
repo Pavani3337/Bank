@@ -2,39 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mini Banking System</title>
+    <title>Bank System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-    <h1>Mini Banking System</h1>
+    <h1>Banking System</h1>
 
-    <div class="account-box">
-        <input id="name" placeholder="Account Name">
-        <input id="balance" type="number" placeholder="Initial Balance">
-        <button onclick="createAccountManually()">Create Account</button>
-    </div>
+    <h3>Create Account</h3>
+    <input id="accNo" type="number" placeholder="Account Number">
+    <input id="name" placeholder="Account Name">
+    <input id="balance" type="number" placeholder="Initial Balance">
+    <button onclick="createAccount()">Create Account</button>
 
     <hr>
 
-    <div class="search-box">
-        <input id="searchAcc" type="number" placeholder="Enter Account Number">
-        <button onclick="searchAccount()">Search / Load Account</button>
-    </div>
+    <h3>Search Account</h3>
+    <input id="searchAcc" type="number" placeholder="Enter Account Number">
+    <button onclick="searchAccount()">Search</button>
 
     <h2 id="accountInfo">No Account Selected</h2>
+    <h2 id="balanceDisplay"></h2>
 
     <div class="actions">
-        <input id="amount" type="number" placeholder="Enter Amount">
+        <input id="amount" type="number" placeholder="Amount">
         <button onclick="deposit()">Deposit</button>
         <button onclick="withdraw()">Withdraw</button>
     </div>
 
-    <h2 id="balanceDisplay">Balance: ₹0</h2>
-
-    <h3>Transaction History</h3>
+    <h3>Transactions</h3>
     <ul id="history"></ul>
 
 </div>
