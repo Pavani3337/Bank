@@ -1,7 +1,6 @@
 let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
 let currentAccount = null;
 
-// 💾 Save
 function saveData() {
     localStorage.setItem("accounts", JSON.stringify(accounts));
 }
@@ -35,7 +34,7 @@ function createAccount() {
     alert("Account Created!");
 }
 
-// 🔐 LOGIN
+// 🔐 LOGIN FIX (IMPORTANT)
 function loginAccount() {
     let accNo = parseInt(document.getElementById("loginAccNo").value);
     let pin = document.getElementById("loginPin").value;
@@ -43,19 +42,26 @@ function loginAccount() {
     currentAccount = accounts.find(a => a.accNo === accNo && a.pin === pin);
 
     if (!currentAccount) {
-        alert("Invalid login");
+        alert("Invalid Account Number or PIN");
         return;
     }
 
     updateUI();
 }
 
-// 💰 Deposit
+// 💰 Deposit FIX
 function deposit() {
-    if (!currentAccount) return alert("Login first");
+    if (!currentAccount) {
+        alert("Please login first");
+        return;
+    }
 
     let amount = parseFloat(document.getElementById("amount").value);
-    if (isNaN(amount) || amount <= 0) return;
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Enter valid amount");
+        return;
+    }
 
     currentAccount.balance += amount;
     currentAccount.history.push(`Deposited ₹${amount}`);
@@ -64,12 +70,19 @@ function deposit() {
     updateUI();
 }
 
-// 💸 Withdraw
+// 💸 Withdraw FIX
 function withdraw() {
-    if (!currentAccount) return alert("Login first");
+    if (!currentAccount) {
+        alert("Please login first");
+        return;
+    }
 
     let amount = parseFloat(document.getElementById("amount").value);
-    if (isNaN(amount) || amount <= 0) return;
+
+    if (isNaN(amount) || amount <= 0) {
+        alert("Enter valid amount");
+        return;
+    }
 
     if (amount > currentAccount.balance) {
         alert("Insufficient Balance");
@@ -83,9 +96,12 @@ function withdraw() {
     updateUI();
 }
 
-// 🔁 Transfer Money
+// 🔁 Transfer FIX
 function transfer() {
-    if (!currentAccount) return alert("Login first");
+    if (!currentAccount) {
+        alert("Please login first");
+        return;
+    }
 
     let toAcc = parseInt(document.getElementById("toAcc").value);
     let amount = parseFloat(document.getElementById("transferAmount").value);
@@ -97,8 +113,13 @@ function transfer() {
         return;
     }
 
-    if (amount > currentAccount.balance || amount <= 0) {
+    if (isNaN(amount) || amount <= 0) {
         alert("Invalid amount");
+        return;
+    }
+
+    if (amount > currentAccount.balance) {
+        alert("Insufficient Balance");
         return;
     }
 
@@ -112,7 +133,7 @@ function transfer() {
     updateUI();
 }
 
-// 📊 UI Update
+// 📊 UI UPDATE FIX
 function updateUI() {
     document.getElementById("accountInfo").innerText =
         `Account: ${currentAccount.name} (Acc No: ${currentAccount.accNo})`;
@@ -120,20 +141,12 @@ function updateUI() {
     document.getElementById("balanceDisplay").innerText =
         "Balance: ₹" + currentAccount.balance;
 
-    // Summary
-    let totalDeposits = currentAccount.history.filter(h => h.includes("Deposited")).length;
-    let totalWithdrawals = currentAccount.history.filter(h => h.includes("Withdrawn")).length;
-
-    document.getElementById("summary").innerText =
-        `Deposits: ${totalDeposits} | Withdrawals: ${totalWithdrawals}`;
-
-    // History
     let list = document.getElementById("history");
     list.innerHTML = "";
 
-    currentAccount.history.slice().reverse().forEach(h => {
+    currentAccount.history.slice().reverse().forEach(item => {
         let li = document.createElement("li");
-        li.innerText = h;
+        li.innerText = item;
         list.appendChild(li);
     });
 }
